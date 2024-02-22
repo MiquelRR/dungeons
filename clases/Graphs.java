@@ -44,12 +44,13 @@ public class Graphs {
 
     static String path="./clases/asciiart/abcnums.txt";
 
-    static char[][] frase(String frase){
+    public static char[][] frase(String frase){
+        Glifo vacio=gr.get(' ');
         int maxh=0, lon=0;
         char[] fr= frase.toCharArray();
         for (char c : fr) { //major altura
-            maxh=(gr.get(c).getAlt()>maxh)?gr.get(c).getAlt():maxh;
-            lon+=gr.get(c).getAmple();
+            maxh=(gr.getOrDefault(c,vacio).getAlt()>maxh)?gr.getOrDefault(c,vacio).getAlt():maxh;
+            lon+=gr.getOrDefault(c,vacio).getAmple();
         }
         char[][] res = new char[maxh][lon]; // matriz con espacios
         for (int i = 0; i < maxh; i++) {
@@ -58,23 +59,34 @@ public class Graphs {
             }
         }
 
-        int idx=0;
+        int idx=0, con=0;
         for (char c : fr) {
-            int altcar=gr.get(c).getAlt();
+            int altcar=gr.getOrDefault(c,vacio).getAlt();
             int idy=(maxh-altcar)/2;
-            for (char[] l : gr.get(c).getForma()) {
-                int con=0;
+            for (char[] l : gr.getOrDefault(c,vacio).getForma()) {
+                con=0;
                 for (char h : l) {
                     res[idy][idx+con]=h;
                     con++;                                        
                 }
                 idy++;
             }   
+            idx+=con;
         }
         return res;
     }
     
     public static HashMap<Character,Glifo> gr = new HashMap<>();
+    public static String matToString(char[][] mat){
+        String sal="";
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                sal+=mat[i][j];
+            }
+            sal+='\n';
+        }
+        return sal;
+    }
     static{
         Scanner in;
         try {
@@ -101,9 +113,6 @@ public class Graphs {
             }
             Glifo g= new Glifo(heigth, widht, art);
             gr.put(name.toCharArray()[0], g);
-            System.out.println(gr.get(name.toCharArray()[0]).toString());
-            System.out.println(name+"------------------------------------------------------------------------------------------------------");
-
         }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
