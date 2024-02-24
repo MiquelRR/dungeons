@@ -2,6 +2,7 @@ package clases;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Pantalla {
@@ -18,6 +19,7 @@ public class Pantalla {
     private char[][] chars;
     private char[][] cols;
     private char ultcol;
+    private List<AniBloc> aimacions;
 
     public Pantalla(int hor, int ver){
         this.hor = hor;
@@ -29,7 +31,7 @@ public class Pantalla {
         this.borra();
         
     }
-    final public Map<Character,String> colors = Map.of(
+    final public static Map<Character,String> colors = Map.of(
                                 'x',"\u001B[0m", // reset
                                 'r',"\u001B[31m",// roig
                                 'v',"\u001B[32m",// vert
@@ -48,7 +50,19 @@ public class Pantalla {
         quadre.put('d', new char[]{'╔', '╗', '╝', '╚','║', '═',}); // doble
     }
 
-    
+    private boolean instant(AniBloc bloc){
+        bloc.frame();
+        int y=bloc.getInx(),x=bloc.getInx();
+        for (int i = 0; i < bloc.getAlt(); i++) {
+            for (int j = 0; j < bloc.getAmple(); j++) {
+                posa(x+j,y+i,bloc.getFondo()[i][j],bloc.getColor()[i][j]);
+                
+            }
+            
+        }
+        return bloc.getAcabat();
+
+    }
 
 
     protected void clear() {

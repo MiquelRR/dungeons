@@ -5,17 +5,55 @@ import java.util.List;
 
 public class AniBloc {
     private int iny=0;
+    public int getIny() {
+        return iny;
+    }
+
+    public int getInx() {
+        return inx;
+    }
+
+    public char[][] getFondo() {
+        return fondo;
+    }
+
+    public char[][] getColor() {
+        return color;
+    }
+
     private int inx=0;
     private int yob=0;
     private int xob=0;
     private int alt;
+    public int getAlt() {
+        return this.alt;
+    }
+
     private int ample;
+    public int getAmple() {
+        return this.ample;
+    }
+
     private boolean acabat;
+    public boolean isAcabat() {
+        return acabat;
+    }
+
     private char[][] fondo;
     private char[][] color;
     private char[][] objecte;
     private char colorOb;
     private List<int[]> vectors;
+    public AniBloc(int iny, int inx, int alt, int ample){
+        this.iny=iny;
+        this.inx=inx;
+        this.ample=ample;
+        this.alt=alt;
+        this.fondo=omple(alt, ample, ' ');
+        this.color=omple(alt, ample, 'w');
+        this.acabat=false;
+        
+    }
 
     //buida fons i posiciona objecte centrat
     public void setFondo(char[][] sprite, char color) { 
@@ -48,16 +86,16 @@ public class AniBloc {
             this.vectors.add(new int[] {-1,0}); 
         }
     }
-
+    //executa un moviment de la llista
     public void frame(){
         if(!this.vectors.isEmpty()){
             int[] mov=this.vectors.remove(0);
             this.yob+=mov[0];
             this.xob+=mov[1];
         } else this.acabat =true;
-
-        
+        posiciona(this.yob,this.xob,this.objecte,colorOb);        
     }
+    
 
     private void posiciona(int idy, int idx , char[][] obj, char color ) {
         int tx=0,con;
