@@ -29,8 +29,7 @@ public class Monstruo extends Personaje {
             "Zombie", new int[] { 5, 15 },
             "Dragon", new int[] { 5, 25 });
 
-    String especie;
-
+    String especie;       
     public Monstruo(){
         super("");
         String[] noms =nombresMalos.toArray(new String[0]);
