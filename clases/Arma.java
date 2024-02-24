@@ -12,6 +12,11 @@ public class Arma {
             "Spell", new int[] { 1, 5 });
 
     String nom;
+    @Override
+    public String toString() {
+        return nom;
+    }
+
     private int danyomax;
     private int danyomin = 1;
     private static Random r = new Random();
@@ -33,7 +38,7 @@ public class Arma {
         return new Arma(nom);
     }
 
-    public String[] posiblesArmas(){ //devolvemos un array que ya va indexadito
+    public static String[] posiblesArmas(){ //devolvemos un array que ya va indexadito
         return arsenal.keySet().toArray(new String[0]);
     }
 
