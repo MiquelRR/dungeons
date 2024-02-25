@@ -87,7 +87,7 @@ public class juego {
                 System.out.println(mons + " is died!!");
             } else {
                 System.out.println(mons + " still " + mons.getVida() +
-                        " of stregth, and replies you with is " + mons.getArma());
+                        " of stregth, and replies you with his " + mons.getArma());
                 mal = mons.getArma().danyoArma();
                 jug.esAtacado(mal);
                 if (jug.getVida() > 0) {

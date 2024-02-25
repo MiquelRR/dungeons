@@ -52,6 +52,7 @@ public class Graphs {
             maxh=(gr.getOrDefault(c,vacio).getAlt()>maxh)?gr.getOrDefault(c,vacio).getAlt():maxh;
             lon+=gr.getOrDefault(c,vacio).getAmple();
         }
+        maxh+=2;lon+=2;//borde ' ' 
         char[][] res = new char[maxh][lon]; // matriz con espacios
         for (int i = 0; i < maxh; i++) {
             for (int j = 0; j < lon; j++) {
@@ -59,7 +60,8 @@ public class Graphs {
             }
         }
 
-        int idx=0, con=0;
+        int idx=1, con=0; //borde ' ' 
+        // int idx=0, con=0; 
         for (char c : fr) {
             int altcar=gr.getOrDefault(c,vacio).getAlt();
             int idy=(maxh-altcar)/2;
