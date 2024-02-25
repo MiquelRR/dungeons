@@ -6,6 +6,10 @@ import java.util.Random;
 public class Heroe extends Personaje {
     private Random r = new Random();
     private int puntosPuerta;
+    public int getPuntosPuerta() {
+        return puntosPuerta;
+    }
+
     public String getTribu() {
         return tribu;
     }

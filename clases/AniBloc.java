@@ -8,7 +8,6 @@ public class AniBloc {
     private int inx = 0;
     private int alt;
     private int ample;
-    private boolean acabat;
     private char[][] fondo;
     private char[][] color;
     private List<Ani> qAnis = new ArrayList<>();
@@ -20,41 +19,12 @@ public class AniBloc {
         this.alt = alt;
         this.fondo = omple(alt, ample, ' ');
         this.color = omple(alt, ample, 'w');
-        this.acabat = false;
 
     }
 
-    // buida fons i posiciona objecte centrat
-    public void setFondo(char[][] sprite, char color) {
-        this.fondo = omple(this.alt, this.ample, ' ');
-        this.color = omple(this.alt, this.ample, 'w');
-        int idy = (this.alt - sprite.length) / 2;
-        int idx = (this.ample - sprite[0].length) / 2;
-        posiciona(idy, idx, sprite, color);
-    }
+   
 
-
-    public void cauFinsMig(char[][] sprite, char color) {
-        this.acabat = false;
-        List<int[]> vectors = new ArrayList<>();
-        int xob = (this.ample - sprite[0].length) / 2;
-        int yob = sprite.length * -1;
-        // baixada fins enmig
-        for (int i = 0; i < this.alt / 2; i++) {
-            vectors.add(new int[] { 1, 0 });
-        }
-        int espai = (this.alt-sprite.length) /2;// fin baix
-        for (int i = 0; i < espai; i++) {
-            vectors.add(new int[] { 1, 0 });
-        }
-        for (int i = 0; i < espai; i++) { // rebot
-            vectors.add(new int[] { -1, 0 });
-        }
-        Ani anim = new Ani(this.fitAmple(sprite), color, vectors,yob,xob);
-        this.qAnis.add(anim);
-
-    }
-    //acomoda sprite al ample de la finestra amb ' '
+      //acomoda sprite al ample de la finestra amb ' '
     public char[][] fitAmple(char[][] mat){
         if (mat[0].length<this.ample){
             char[][] nova = omple(mat.length,this.ample,' ');
@@ -81,21 +51,117 @@ public class AniBloc {
             return nova;
         } else return mat; 
     }
+    
+     // buida fons i posiciona objecte centrat
+    public void setInmovil(char[][] spr, char color, int retard) {
+        List<int[]> vectors = new ArrayList<>();
+        for (int i = 0; i < retard; i++) {
+            vectors.add(new int[] { 0, 0 });
+        }
+        char[][] sprite=this.fitAlt(this.fitAmple(spr));
+        int yob = (this.alt - sprite.length) / 2;
+        int xob = (this.ample - sprite[0].length) / 2;
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+    }
 
-    public void scrollEsquerre(char[][] sprite, char color){
-        this.acabat=false;
+    public void cauFinsMig(char[][] spr, char color) {
+        List<int[]> vectors = new ArrayList<>();
+        char[][] sprite=this.fitAmple(spr);
+        int xob =0;
+        int yob = sprite.length * -1;
+        int espai = (this.alt-sprite.length) /2;
+        // baixada fins enmig
+        // fin baix
+        for (int i = 0; i < this.alt; i++) {
+            vectors.add(new int[] { 1, 0 });
+        }
+        for (int i = 0; i < espai; i++) { // rebot
+            vectors.add(new int[] { -1, 0 });
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+
+    }
+    public void suraFinsMig(char[][] spr, char color){
+        List<int[]> vectors = new ArrayList<>();
+        char[][] sprite=this.fitAmple(spr);
+        int xob = 0;
+        int yob = this.alt;
+        int espai = (this.alt-sprite.length) /2;
+        for (int i = 0; i < this.alt; i++) {
+            vectors.add(new int[] { -1, 0 });
+        }
+        for (int i = 0; i < espai; i++) { // rebot
+            vectors.add(new int[] { 1, 0 });
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+        
+    }
+
+    public void scrollEsquerre(char[][] spr, char color){
+        char[][] sprite= this.fitAlt(spr);
         List<int[]> vectors = new ArrayList<>();
         int yob= (this.alt-sprite.length)/2;
         int xob= this.ample;
         for (int i = 0; i < this.ample; i++) {
             vectors.add(new int[] { 0, -1 });            
         }
-        Ani anim = new Ani(fitAlt(sprite), color, vectors,yob,xob);
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
         this.qAnis.add(anim);
     }
 
-    public void scrollDret(char[][] sprite, char color){
-        this.acabat=false;
+    public void scrollDret(char[][] spr, char color){
+        char[][] sprite= this.fitAlt(spr);
+        List<int[]> vectors = new ArrayList<>();
+        int yob= (this.alt-sprite.length)/2;
+        int xob=-1*sprite[0].length;
+        //mourá a la dreta
+        for (int i = 0; i < this.ample; i++) {
+            vectors.add(new int[] { 0, 1 });            
+        }
+        //rebota
+        for (int i = 0; i < this.ample-sprite[0].length; i++) {
+            vectors.add(new int[] { 0, -1 });
+        }
+        //o acaba scroll si es mes llarg
+        for (int i = 0; i < sprite[0].length-this.ample; i++) {
+            vectors.add(new int[] { 0, 1 });
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+    }
+
+    public void scrDreMi(char[][] spr, char color){
+        char[][] sprite= this.fitAlt(spr);
+        List<int[]> vectors = new ArrayList<>();
+        int yob= (this.alt-sprite.length)/2;
+        int xob=-1*sprite[0].length;
+        int espai=(this.ample-sprite[0].length)/2;
+        for (int i = 0; i < this.ample; i++) {
+            vectors.add(new int[] { 0, 1 });            
+        }
+        for (int i = 0; i < espai; i++) {
+            vectors.add(new int[] { 0, -1 });  
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+    }
+    public void scrEsMi(char[][] spr, char color){
+        char[][] sprite= this.fitAlt(spr);
+        List<int[]> vectors = new ArrayList<>();
+        int yob= (this.alt-sprite.length)/2;
+        int xob=this.ample;
+        int espai=(this.ample-sprite[0].length)/2;
+        for (int i = 0; i < this.ample; i++) {
+            vectors.add(new int[] { 0, -1 });            
+        }
+        for (int i = 0; i < espai; i++) {
+            vectors.add(new int[] { 0, 1 });  
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
     }
 
 
@@ -105,8 +171,8 @@ public class AniBloc {
             if(this.qAnis.get(0).aplica()) {
                 this.qAnis.remove(0);
                 if(!this.qAnis.isEmpty()){
-                    this.acabat = this.qAnis.get(0).aplica(); // no poden haver llistes buides
-                } this.acabat = true;
+                    this.qAnis.get(0).aplica(); // no poden haver llistes buides
+                } 
             }
         } 
         if(!this.qAnis.isEmpty()){
@@ -166,10 +232,6 @@ public class AniBloc {
 
     public int getAmple() {
         return this.ample;
-    }
-
-    public boolean isAcabat() {
-        return acabat;
     }
 
 }

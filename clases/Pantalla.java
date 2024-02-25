@@ -61,7 +61,7 @@ public class Pantalla {
 
     }
 
-    protected void clear() {
+    protected void clear2() {
         try {
             String os = System.getProperty("os.name").toLowerCase();
             ProcessBuilder processBuilder;
@@ -75,6 +75,9 @@ public class Pantalla {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    protected void clear(){
+        System.out.print("\033[H");
     }
 
     public void situa(int x, int y, String texte, char color) {

@@ -18,6 +18,10 @@ public class Arma {
     }
 
     private int danyomax;
+    public int getDanyomax() {
+        return danyomax;
+    }
+
     private int danyomin = 1;
     private static Random r = new Random();
 

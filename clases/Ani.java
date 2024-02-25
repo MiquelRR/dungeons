@@ -17,7 +17,7 @@ public class Ani {
         this.xob = xob;
         this.yob = yob;
     }
-
+    //torna true si la animacio se ha acabat
     public Boolean aplica(){
         if(!this.vectors.isEmpty()){
             int[] mov = this.vectors.remove(0);
