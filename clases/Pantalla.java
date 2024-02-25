@@ -48,7 +48,7 @@ public class Pantalla {
     }
 
     private boolean instant(AniBloc bloc) {
-        bloc.frame();
+        boolean viu=bloc.frame();
         int y = bloc.getIny(), x = bloc.getInx();
         for (int i = 0; i < bloc.getAlt(); i++) {
             for (int j = 0; j < bloc.getAmple(); j++) {
@@ -57,7 +57,7 @@ public class Pantalla {
             }
 
         }
-        return bloc.isAcabat();
+        return viu;
 
     }
 
@@ -143,9 +143,11 @@ public class Pantalla {
     }
 
     public void mostraAnim(int vel) throws InterruptedException {
-        while (true) {
+        boolean viu=true;
+        while (viu) {
+            viu=false;
             for (AniBloc aniBloc : animacions) {
-                this.instant(aniBloc);
+                viu=viu | this.instant(aniBloc);
             }
             mostra();
             Thread.sleep(vel);

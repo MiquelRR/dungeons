@@ -63,11 +63,23 @@ public class AniBloc {
                 for (int j = 0; j < mat[0].length; j++) {
                     nova[i][j+x]=mat[i][j];
                 }
-                
             }
             return nova;
-        } else return mat;
-        
+        } else return mat; 
+    }
+
+    //acomoda sprite al ample de la finestra amb ' '
+    public char[][] fitAlt(char[][] mat){
+        if (mat.length<this.alt){
+            char[][] nova = omple(this.alt,mat[0].length,' ');
+            int y=(this.alt-mat.length)/2;
+            for (int i = 0; i < mat.length; i++) {
+                for (int j = 0; j < mat[0].length; j++) {
+                    nova[i+y][j]=mat[i][j];
+                }
+            }
+            return nova;
+        } else return mat; 
     }
 
     public void scrollEsquerre(char[][] sprite, char color){
@@ -78,12 +90,17 @@ public class AniBloc {
         for (int i = 0; i < this.ample; i++) {
             vectors.add(new int[] { 0, -1 });            
         }
-        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        Ani anim = new Ani(fitAlt(sprite), color, vectors,yob,xob);
         this.qAnis.add(anim);
     }
 
+    public void scrollDret(char[][] sprite, char color){
+        this.acabat=false;
+    }
+
+
     // selecciona un increment dels vectors i aplica l'imatge al fons en la nova posició
-    public void frame() {
+    public boolean frame() {
         if (!this.qAnis.isEmpty()) {
             if(this.qAnis.get(0).aplica()) {
                 this.qAnis.remove(0);
@@ -91,11 +108,12 @@ public class AniBloc {
                     this.acabat = this.qAnis.get(0).aplica(); // no poden haver llistes buides
                 } this.acabat = true;
             }
-        } this.acabat = true;
+        } 
         if(!this.qAnis.isEmpty()){
         posiciona(this.qAnis.get(0).getYob(), this.qAnis.get(0).getXob(),
         this.qAnis.get(0).getSprite(), this.qAnis.get(0).getColor());
-        }
+        return true;
+        } return false;
     }
 
     private void posiciona(int idy, int idx, char[][] obj, char color) {

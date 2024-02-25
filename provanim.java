@@ -4,8 +4,8 @@ public class provanim {
     public static void main(String[] args) throws InterruptedException {
         Graphs p = new Graphs();
         Pantalla pan = new Pantalla(90, 33);
-        AniBloc esq = new AniBloc(11, 3, 20  , 30 );
-        AniBloc dre = new AniBloc(11, 40, 18, 30);
+        AniBloc esq = new AniBloc(11, 3, 20  , 29 );
+        AniBloc dre = new AniBloc(11, 40, 18, 29);
         AniBloc centre = new AniBloc(1, 1, 10, 88);
 
         for (int i = 30; i > 0; i--) {
