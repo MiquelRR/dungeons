@@ -163,7 +163,25 @@ public class AniBloc {
         Ani anim = new Ani(sprite, color, vectors,yob,xob);
         this.qAnis.add(anim);
     }
-
+    public void scrFi(char dir,char[][] spr, char color){
+        char[][] sprite= this.fitAlt(spr);
+        List<int[]> vectors = new ArrayList<>();
+        int yob= (this.alt-sprite.length)/2;
+        int[] v;
+        int xob;
+        if (dir=='>'){
+            xob=-1*sprite[0].length;
+            v=new int[] { 0, 1 };
+        } else{
+            xob=this.ample;
+            v=new int[] { 0, -1 };
+        }
+        for (int i = 0; i < this.ample+sprite[0].length; i++) {
+            vectors.add(v);            
+        }
+        Ani anim = new Ani(sprite, color, vectors,yob,xob);
+        this.qAnis.add(anim);
+    }
 
     // selecciona un increment dels vectors i aplica l'imatge al fons en la nova posició
     public boolean frame() {

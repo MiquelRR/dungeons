@@ -3,8 +3,10 @@ import java.util.Random;
 import clases.*;
 
 public class jocTexAnimat {
+    final static int vel = 20;
+
     public static void main(String[] args) throws InterruptedException {
-        int vel = 20;
+
         String[] hab = { // noms de les habitacions
                 "living room", "kitchen", "bedroom", "bathroom", "dining room",
                 "office", "laundry room", "guest room", "study", "playroom",
@@ -68,80 +70,188 @@ public class jocTexAnimat {
             pan.mostraAnim(vel);
             sc.nextLine();
             if (monstre == null) {
-                texte="No monster in this room";
+                texte = "No monster in this room";
                 supBand.scrollEsquerre(Graphs.frase(texte), 'g');
             } else {
-                texte="Here it is " + monstre;
+                texte = "Here it is " + monstre;
                 supBand.scrEsMi(Graphs.frase(texte), 'r');
-                supBand.setInmovil(Graphs.frase(texte), 'r',20);
-                texte="it's a " + monstre.getEspecie();
+                supBand.setInmovil(Graphs.frase(texte), 'r', 20);
+                texte = "it's a " + monstre.getEspecie();
                 supBand.scrDreMi(Graphs.frase(texte), 'r');
-                supBand.setInmovil(Graphs.frase(texte), 'r',20);
-                texte="Monster live is";
-                supBand.scrDreMi(Graphs.frase(texte), 'g');
-                pan.marc(h-ch,v-cv,ch,cv,'b','r');//armaM
-                pan.marc(h-ch,st,ch,cv,'b','r');//vidaM
-                texte=monstre.getArma().toString();
+                supBand.setInmovil(Graphs.frase(texte), 'r', 20);
+                texte = "do you let it live?";
+                infBand.scrEsMi(Graphs.frase(texte), 'g');
+                pan.marc(h - ch, v - cv, ch, cv, 'b', 'g');// armaM
+                pan.marc(h - ch, st, ch, cv, 'b', 'r');// vidaM
+                texte = monstre.getArma().toString();
                 armaM.cauFinsMig(Graphs.frase(texte), 'g');
-                texte=Integer.toString(monstre.getVida());
+                texte = Integer.toString(monstre.getVida());
                 vidaM.cauFinsMig(Graphs.frase(texte), 'r');
                 pan.addAniBloc(vidaM);
                 pan.addAniBloc(armaM);
                 pan.mostraAnim(vel);
                 sc.nextLine();
-                fight(jugador, monstre);
+                fight(jugador, monstre, infBand, supBand, armaH, armaM, vidaH,
+                        vidaM, pan);
             }
             if (jugador.getVida() > 0) {
                 int pt = jugador.getPuntosPuerta();
-                int ini=jugador.getVida();
-                for (int i =ini+1 ; i <= ini+pt; i++) {
-                    texte=""+i;
-                    vidaH.suraFinsMig(Graphs.frase(texte), 'c');
-                }
+                int ini = jugador.getVida();
+                creix(vidaH, pt, ini, 'c');
                 jugador.pasaPuerta();
                 pos++;
             }
         }
         if (jugador.getVida() > 0) {
-            char[][] tex=Graphs.frase("CONGRATULATIONS");
+            char[][] tex = Graphs.frase("CONGRATULATIONS");
             supBand.cauFinsMig(tex, 'r');
             supBand.cauFinsMig(tex, 'l');
             supBand.cauFinsMig(tex, 'g');
             supBand.cauFinsMig(tex, 'b');
-            tex=Graphs.frase("YOU WIN");
+            String texte = jugador + ", the " + jugador.getTribu() + " reached all rooms!!";
+            tex = Graphs.frase(texte);
+            infBand.scrollEsquerre(tex, 'c');
+            tex = Graphs.frase("YOU WIN");
             infBand.suraFinsMig(tex, 'r');
             infBand.suraFinsMig(tex, 'l');
             infBand.suraFinsMig(tex, 'g');
             infBand.suraFinsMig(tex, 'b');
             pan.mostraAnim(vel);
-           
+
         }
 
     }
 
-    private static void fight(Heroe jug, Monstruo mons) {
-        Scanner sc= new Scanner(System.in);
+    public static void creix(AniBloc bloc, int pt, int ini, char color) {
+        String texte;
+        for (int i = ini + 1; i <= ini + pt; i++) {
+            texte = "" + i;
+            bloc.suraFinsMig(Graphs.frase(texte), color);
+            //System.out.println("^" + bloc.toString() + "^");
+        }
+    }
+
+    public static void decreix(AniBloc casella, int pt, int ini, char color) {
+        String texte;
+        for (int i = ini - 1; i <= ini - pt; i--) {
+            texte = "" + i;
+            casella.cauFinsMig(Graphs.frase(texte), color);
+            //System.out.println("v" + casella.toString() + "v");
+        }
+    }
+
+    public static void fight(Heroe jug, Monstruo mons, AniBloc infBand,
+            AniBloc supBand, AniBloc armaH, AniBloc armaM, AniBloc vidaH,
+            AniBloc vidaM, Pantalla pan) throws InterruptedException {
+        Scanner sc = new Scanner(System.in);
+        char[][] tex;
+        char[][] oops = Graphs.frase("OOPS!!");
+        char[][] wtf = Graphs.frase("WTF!");
+        char[][] buff = Graphs.frase("Buff!");
+        char[][] buit = Graphs.frase(" ");
         while (mons.getVida() > 0 && jug.getVida() > 0) {
-        
-            System.out.println(jug + " attacs " + mons + " with his " + jug.getArma());
+            tex = Graphs.frase("Attack " + mons.getEspecie() + " " + mons);
+            infBand.scrollDret(tex, 'c');
             int mal = jug.getArma().danyoArma();
+            // creix(armaH, 0, mal, 'g');-------------------------Consultar Patxi
+            int ini = 0, pt = mal;
+            char color = 'g';
+            for (int i = ini + 1; i <= ini + pt; i++) {
+                String texte = "" + i;
+                armaH.suraFinsMig(Graphs.frase(texte), color);
+            }
+            vidaM.scrEsMi(oops, 'g');
+            vidaM.suraFinsMig(wtf, 'w');
+            tex = Graphs.frase(onomat(mal));
+            supBand.scrFi('>', tex, 'r');
+            // decreix(vidaM, mons.getVida(), mal, 'g');-----------Patxiiiiiii!
+            String texte;
+            ini = mons.getVida();
+            pt = mal;
+            color = 'g';
+            for (int i = ini - 1; i <= ini - pt; i--) {
+                texte = "" + i;
+                vidaM.cauFinsMig(Graphs.frase(texte), color);
+            }
             mons.esAtacado(mal);
-            System.out.println("and causes a damage of " + mal);
+            pan.mostraAnim(vel);
+            sc.nextLine();
             if (mons.getVida() < 1) {
-                System.out.println(mons + " is died!!");
+                tex = Graphs.frase("DIED!");
+                vidaM.cauFinsMig(tex, 'w');
+                vidaM.cauFinsMig(tex, 'r');
+                vidaM.cauFinsMig(tex, 'g');
+                vidaM.cauFinsMig(tex, 'n');
+                vidaM.cauFinsMig(buit, 'n');
+                armaM.suraFinsMig(buit, 'n');
+                pan.mostraAnim(vel);
+                sc.nextLine();
+
             } else {
-                System.out.println(mons + " still " + mons.getVida() +
-                        " of stregth, and replies you with his " + mons.getArma());
+                tex = Graphs.frase(mons.getEspecie() + " " + mons + " replies!");
+                infBand.scrFi('<', tex, 'r');
+                vidaH.scrDreMi(oops, 'g');
+                vidaH.suraFinsMig(wtf, 'w');
                 mal = mons.getArma().danyoArma();
+                // creix(armaM, 0, mal, 'g');---------------q pasa?
+                ini = 0;
+                pt = mal;
+                color = 'g';
+                for (int i = ini + 1; i <= ini + pt; i++) {
+                    texte = "" + i;
+                    armaM.suraFinsMig(Graphs.frase(texte), color);
+                }
+                tex = Graphs.frase(onomat(mal));
+                infBand.scrFi('<', tex, 'r');
                 jug.esAtacado(mal);
+                //decreix(vidaH, jug.getVida(), mal, 'g');
+                ini = jug.getVida();
+                pt = mal;
+                color = 'g';
+                for (int i = ini - 1; i <= ini - pt; i--) {
+                    texte = "" + i;
+                    vidaM.cauFinsMig(Graphs.frase(texte), color);
+                }
                 if (jug.getVida() > 0) {
-                    System.out.println("You still have " + jug.getVida() +
-                            " of strength left, and you're not going to leave things as they are.");
+                    vidaH.suraFinsMig(buff, 'w');
+                    tex = Graphs.frase("" + jug.getVida());
+                    vidaH.scrDreMi(tex, 'c');
+                    tex = Graphs.frase("Still Alive!!");
+                    infBand.scrEsMi(tex, 'c');
+                    tex = Graphs.frase("Ready for my reply!");
+                    supBand.scrEsMi(tex, 'c');
+                    pan.mostraAnim(vel);
+                    sc.nextLine();
                 } else {
-                    System.out.println(mons + " kills you. The bank that owns your mortgage has an issue.");
+                    char[][] OO = Graphs.frase("00");
+                    vidaH.cauFinsMig(OO, 'w');
+                    vidaH.cauFinsMig(OO, 'r');
+                    vidaH.cauFinsMig(OO, 'g');
+                    vidaH.cauFinsMig(OO, 'n');
+                    vidaH.cauFinsMig(buit, 'n');
+                    tex = Graphs.frase("DIED! ohhh DIED!! ohhh DIED! ohhh DIED!! ohhh");
+                    supBand.scrFi('>', tex, 'n');
+                    tex = Graphs.frase(mons + ", the " + mons.getEspecie()
+                            + " kills you. The bank that owns your mortgage has an issue.");
+                    supBand.scrFi('<', tex, 'g');
+                    armaM.cauFinsMig(buit, 'n');
+                    pan.mostraAnim(vel);
+                    sc.nextLine();
                 }
             }
+
         }
+    }
+
+    private static String onomat(int num) {
+        Random p = new Random();
+        String[] onom = { "Bam!", "Pow!", "Biff!", "Smack!", "Wham!", "Thud!", "Crack!", "Zap!", "Slam!", "Thunk!" };
+        String sal = "";
+        for (int i = 0; i < num; i++) {
+            sal += onom[p.nextInt(onom.length)];
+        }
+        return sal;
+
     }
 
     private static void llenaPasillo(int nMonstruos, Random p, Monstruo[] pasillo) {
@@ -221,7 +331,6 @@ public class jocTexAnimat {
             } catch (Exception e) {
                 res = -1;
             }
-
         }
         return res - 1;
     }
@@ -231,13 +340,14 @@ public class jocTexAnimat {
         titol.cauFinsMig(Graphs.frase("ç"), 'r');
         String texte = "You're the best warrior";
         cintaDalt.scrDreMi(Graphs.frase(texte), 'w');
-        texte = "We have found betwhhe unemployees";
+        texte = "We have found betwheen unemployees";
         cintaDalt.scrEsMi(Graphs.frase(texte), 'g');
         texte = "to rescue";
         cintaMig.scrEsMi(Graphs.frase(texte), 'g');
         texte = "a poor Orphan";
         cintaMig.scrDreMi(Graphs.frase(texte), 'r');
-        texte = "from the very Evil";
+        cintaMig.setInmovil(Graphs.frase(texte), 'w', 10);
+        texte = "from the very very very Evil";
         cintaBaix.scrDreMi(Graphs.frase(texte), 'g');
         texte = "King Patximus";
         cintaBaix.scrEsMi(Graphs.frase(texte), 'r');
@@ -248,8 +358,8 @@ public class jocTexAnimat {
         cintaMig.cauFinsMig(Graphs.frase("Vicente"), 'c');
         cintaMig.setInmovil(Graphs.frase("Yes; Vicente"), 'g', 7);
         cintaMig.cauFinsMig(Graphs.frase("The Subdelegaited"), 'n');
-        cintaMig.setInmovil(Graphs.frase("The Subdelegaited"), 'n', 10);
-        cintaMig.setInmovil(Graphs.frase("Vicente"), 'w', 25);
+        cintaMig.setInmovil(Graphs.frase("The Subdelegaited"), 'n', 25);
+        cintaMig.setInmovil(Graphs.frase("Vicente"), 'c', 10);
         texte = "from the King Patximus";
         cintaBaix.suraFinsMig(Graphs.frase(texte), 'r');
         cintaBaix.setInmovil(Graphs.frase(texte), 'r', 25);
