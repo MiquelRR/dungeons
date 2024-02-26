@@ -62,11 +62,21 @@ public class jocTexAnimat {
         nom = sc.nextLine();
         int pos = 0;
         while (jugador.getVida() > 0 && pos < 39) {
+            char[][] tex;
             Monstruo monstre = pasillo[pos];
             String texte = "Open door " + (pos + 1);
-            supBand.scrollEsquerre(Graphs.frase(texte), 'w');
+            tex=Graphs.frase(texte);
+            supBand.scrollEsquerre(tex, 'w');
+            texte = jugador.toString()+"; "+jugador.getTribu();
+            tex=Graphs.frase(texte);
+            infBand.suraFinsMig(tex,'w');
+            infBand.setInmovil(tex, 'g', 50);
+            texte = "you've got live!";
+            tex=Graphs.frase(texte);
+            infBand.suraFinsMig(tex,'c');
             texte = "to the " + hab[pos];
-            infBand.scrollEsquerre(Graphs.frase(texte), 'w');
+            tex=Graphs.frase(texte);
+            infBand.scrEsMi(tex, 'w');
             pan.mostraAnim(vel);
             sc.nextLine();
             if (monstre == null) {
@@ -132,10 +142,13 @@ public class jocTexAnimat {
     }
 
     public static void decreix(AniBloc casella, int pt, int ini, char color) {
+        char[][] OO = Graphs.frase("00");
         String texte;
-        for (int i = ini - 1; i <= ini - pt; i--) {
+        char[][] tex;
+        for (int i = ini - 1; i >= ini - pt; i--) {
             texte = "" + i;
-            casella.cauFinsMig(Graphs.frase(texte), color);
+            tex=(i>1)?Graphs.frase(texte):OO;
+            casella.cauFinsMig(tex, color);
             //System.out.println("v" + casella.toString() + "v");
         }
     }
@@ -149,6 +162,7 @@ public class jocTexAnimat {
         char[][] wtf = Graphs.frase("WTF!");
         char[][] buff = Graphs.frase("Buff!");
         char[][] buit = Graphs.frase(" ");
+        char[][] OO = Graphs.frase("00");
         while (mons.getVida() > 0 && jug.getVida() > 0) {
             tex = Graphs.frase("Attack " + mons.getEspecie() + " " + mons);
             infBand.scrollDret(tex, 'c');
@@ -158,7 +172,8 @@ public class jocTexAnimat {
             char color = 'g';
             for (int i = ini + 1; i <= ini + pt; i++) {
                 String texte = "" + i;
-                armaH.suraFinsMig(Graphs.frase(texte), color);
+                tex=Graphs.frase(texte);
+                armaH.suraFinsMig(tex, color);
             }
             vidaM.scrEsMi(oops, 'g');
             vidaM.suraFinsMig(wtf, 'w');
@@ -169,9 +184,10 @@ public class jocTexAnimat {
             ini = mons.getVida();
             pt = mal;
             color = 'g';
-            for (int i = ini - 1; i <= ini - pt; i--) {
+            for (int i = ini - 1; i >= ini - pt; i--) {
                 texte = "" + i;
-                vidaM.cauFinsMig(Graphs.frase(texte), color);
+                tex=(i>1)?Graphs.frase(texte):OO;
+                vidaM.cauFinsMig(tex, color);
             }
             mons.esAtacado(mal);
             pan.mostraAnim(vel);
@@ -184,15 +200,17 @@ public class jocTexAnimat {
                 vidaM.cauFinsMig(tex, 'n');
                 vidaM.cauFinsMig(buit, 'n');
                 armaM.suraFinsMig(buit, 'n');
+                tex = Graphs.frase(jug.getArma().toString());
+                armaH.suraFinsMig(tex, color);
                 pan.mostraAnim(vel);
                 sc.nextLine();
 
             } else {
-                tex = Graphs.frase(mons.getEspecie() + " " + mons + " replies!");
+                mal = mons.getArma().danyoArma();
+                tex = Graphs.frase(mons.getEspecie() + " " + mons + " replies! "+onomat(mal));
                 infBand.scrFi('<', tex, 'r');
                 vidaH.scrDreMi(oops, 'g');
                 vidaH.suraFinsMig(wtf, 'w');
-                mal = mons.getArma().danyoArma();
                 // creix(armaM, 0, mal, 'g');---------------q pasa?
                 ini = 0;
                 pt = mal;
@@ -201,40 +219,49 @@ public class jocTexAnimat {
                     texte = "" + i;
                     armaM.suraFinsMig(Graphs.frase(texte), color);
                 }
-                tex = Graphs.frase(onomat(mal));
-                infBand.scrFi('<', tex, 'r');
-                jug.esAtacado(mal);
-                //decreix(vidaH, jug.getVida(), mal, 'g');
+                //decreix(vidaH, jug.getVida(), mal, 'g');---------------q pasa?
                 ini = jug.getVida();
                 pt = mal;
                 color = 'g';
-                for (int i = ini - 1; i <= ini - pt; i--) {
+                for (int i = ini - 1; i >= ini - pt; i--) {
                     texte = "" + i;
-                    vidaM.cauFinsMig(Graphs.frase(texte), color);
+                    tex=(i>1)?Graphs.frase(texte):OO;
+                    vidaH.cauFinsMig(tex, color);
                 }
+                jug.esAtacado(mal);
                 if (jug.getVida() > 0) {
                     vidaH.suraFinsMig(buff, 'w');
                     tex = Graphs.frase("" + jug.getVida());
                     vidaH.scrDreMi(tex, 'c');
+                    tex = Graphs.frase(jug.getArma().toString());
+                    armaH.suraFinsMig(tex, 'g');
                     tex = Graphs.frase("Still Alive!!");
                     infBand.scrEsMi(tex, 'c');
+                    tex = Graphs.frase(Chiqui.frase());
+                    supBand.scrFi('<',tex, 'n');
                     tex = Graphs.frase("Ready for my reply!");
-                    supBand.scrEsMi(tex, 'c');
+                    supBand.scrDreMi(tex, 'c');
                     pan.mostraAnim(vel);
                     sc.nextLine();
                 } else {
-                    char[][] OO = Graphs.frase("00");
                     vidaH.cauFinsMig(OO, 'w');
                     vidaH.cauFinsMig(OO, 'r');
                     vidaH.cauFinsMig(OO, 'g');
                     vidaH.cauFinsMig(OO, 'n');
                     vidaH.cauFinsMig(buit, 'n');
+                    armaH.cauFinsMig(buit, 'n');
                     tex = Graphs.frase("DIED! ohhh DIED!! ohhh DIED! ohhh DIED!! ohhh");
-                    supBand.scrFi('>', tex, 'n');
+                    supBand.scrFi('<', tex, 'n');
                     tex = Graphs.frase(mons + ", the " + mons.getEspecie()
                             + " kills you. The bank that owns your mortgage has an issue.");
-                    supBand.scrFi('<', tex, 'g');
-                    armaM.cauFinsMig(buit, 'n');
+                    infBand.scrFi('<', tex, 'g');
+                    tex=Graphs.frase(mons.toString());
+                    vidaM.cauFinsMig(tex, 'r');
+                    tex=Graphs.frase("kills you");
+                    armaM.cauFinsMig(tex, 'v');
+                    armaM.cauFinsMig(tex, 'l');
+                    armaM.cauFinsMig(tex, 'w');
+                    armaM.cauFinsMig(tex, 'r');
                     pan.mostraAnim(vel);
                     sc.nextLine();
                 }
@@ -311,8 +338,11 @@ public class jocTexAnimat {
     private static void mostraSeleccio(String[] llista, Pantalla pan, AniBloc cintaDalt, AniBloc cintaMig,
             AniBloc cintaBaix, String texte)
             throws InterruptedException {
-        cintaDalt.scrEsMi(Graphs.frase(texte), 'n');
-        cintaDalt.suraFinsMig(Graphs.frase(texte), 'g');
+        char[][] tex=Graphs.frase(texte);
+        cintaDalt.scrEsMi(tex, 'n');
+        cintaDalt.suraFinsMig(tex, 'g');
+        cintaDalt.setInmovil(tex, 'g', 20);
+        cintaDalt.cauFinsMig(tex, 'w');
         texte = "1   " + llista[0] + "   2   " + llista[1];
         cintaMig.scrDreMi(Graphs.frase(texte), 'c');
         texte = "3   " + llista[2];
