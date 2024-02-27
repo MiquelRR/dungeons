@@ -132,7 +132,7 @@ public class jocTexAnimat {
 
     }
 
-    public static void creix(AniBloc bloc, int pt, int ini, char color) {
+    private static void creix(AniBloc bloc, int pt, int ini, char color) {
         String texte;
         for (int i = ini + 1; i <= ini + pt; i++) {
             texte = "" + i;
@@ -141,7 +141,7 @@ public class jocTexAnimat {
         }
     }
 
-    public static void decreix(AniBloc casella, int pt, int ini, char color) {
+    private static void decreix(AniBloc casella, int pt, int ini, char color) {
         char[][] OO = Graphs.frase("00");
         String texte;
         char[][] tex;
@@ -167,28 +167,15 @@ public class jocTexAnimat {
             tex = Graphs.frase("Attack " + mons.getEspecie() + " " + mons);
             infBand.scrollDret(tex, 'c');
             int mal = jug.getArma().danyoArma();
-            // creix(armaH, 0, mal, 'g');-------------------------Consultar Patxi
-            int ini = 0, pt = mal;
-            char color = 'g';
-            for (int i = ini + 1; i <= ini + pt; i++) {
-                String texte = "" + i;
-                tex=Graphs.frase(texte);
-                armaH.suraFinsMig(tex, color);
-            }
+            creix(armaH, 0, mal, 'g');
+
             vidaM.scrEsMi(oops, 'g');
             vidaM.suraFinsMig(wtf, 'w');
             tex = Graphs.frase(onomat(mal));
             supBand.scrFi('>', tex, 'r');
-            // decreix(vidaM, mons.getVida(), mal, 'g');-----------Patxiiiiiii!
-            String texte;
-            ini = mons.getVida();
-            pt = mal;
-            color = 'g';
-            for (int i = ini - 1; i >= ini - pt; i--) {
-                texte = "" + i;
-                tex=(i>1)?Graphs.frase(texte):OO;
-                vidaM.cauFinsMig(tex, color);
-            }
+            
+            decreix(vidaM,  mal, mons.getVida(), 'g');
+
             mons.esAtacado(mal);
             pan.mostraAnim(vel);
             sc.nextLine();
@@ -201,7 +188,7 @@ public class jocTexAnimat {
                 vidaM.cauFinsMig(buit, 'n');
                 armaM.suraFinsMig(buit, 'n');
                 tex = Graphs.frase(jug.getArma().toString());
-                armaH.suraFinsMig(tex, color);
+                armaH.suraFinsMig(tex, 'g');
                 pan.mostraAnim(vel);
                 sc.nextLine();
 
@@ -211,23 +198,10 @@ public class jocTexAnimat {
                 infBand.scrFi('<', tex, 'r');
                 vidaH.scrDreMi(oops, 'g');
                 vidaH.suraFinsMig(wtf, 'w');
-                // creix(armaM, 0, mal, 'g');---------------q pasa?
-                ini = 0;
-                pt = mal;
-                color = 'g';
-                for (int i = ini + 1; i <= ini + pt; i++) {
-                    texte = "" + i;
-                    armaM.suraFinsMig(Graphs.frase(texte), color);
-                }
-                //decreix(vidaH, jug.getVida(), mal, 'g');---------------q pasa?
-                ini = jug.getVida();
-                pt = mal;
-                color = 'g';
-                for (int i = ini - 1; i >= ini - pt; i--) {
-                    texte = "" + i;
-                    tex=(i>1)?Graphs.frase(texte):OO;
-                    vidaH.cauFinsMig(tex, color);
-                }
+                creix(armaM,  mal, 0, 'g');
+         
+                decreix(vidaH, mal, jug.getVida(), 'g');
+
                 jug.esAtacado(mal);
                 if (jug.getVida() > 0) {
                     vidaH.suraFinsMig(buff, 'w');

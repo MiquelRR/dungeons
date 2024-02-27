@@ -61,7 +61,7 @@ public class Pantalla {
 
     }
 
-    protected void clear2() {
+    protected void clear2() { // provoca mes parapadeig que print("\033[H")
         try {
             String os = System.getProperty("os.name").toLowerCase();
             ProcessBuilder processBuilder;
@@ -90,11 +90,9 @@ public class Pantalla {
                 this.posa(x + av, y, c, color);
                 av++;
             }
-
         }
         cy = y + 1;
         cx = x;
-
     }
 
     // sobrecàrrega sense color
@@ -150,7 +148,7 @@ public class Pantalla {
         while (viu) {
             viu=false;
             for (AniBloc aniBloc : animacions) {
-                viu=viu | this.instant(aniBloc);
+                viu=this.instant(aniBloc) || viu;
             }
             mostra();
             Thread.sleep(vel);
